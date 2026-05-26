@@ -1,0 +1,635 @@
+/* 
+   시니어 맞춤형 틀린그림찾기 앱 - 전용 스타일시트 (style.css)
+   컨셉: 미색 한지 감성의 편안한 고대비, 큼직한 가독성, 부드러운 반응형 디자인
+*/
+
+/* 구글 폰트 불러오기: 가독성이 뛰어난 눈이 편안한 본문용 폰트(Noto Sans KR) 및 제목용(Gowun Batang) */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+:root {
+    /* 색상 파레트: 눈이 침침하신 어르신들을 위한 부드러운 고대비 한지 색채 */
+    --bg-cream: #FAF6EE;       /* 전통 한지 느낌의 부드러운 아이보리 배경 */
+    --bg-card: #FFFFFF;        /* 카드 및 그림판 화이트 배경 */
+    --text-dark: #1F2421;      /* 아주 짙은 차콜 (완전 검은색보다 눈 피로도 감소) */
+    --text-muted: #4A5568;     /* 한 톤 부드러운 짙은 회색 */
+    --primary: #D44D25;        /* 단청 빨강/오렌지 (핵심 강조 색상) */
+    --secondary: #1F6B52;      /* 단청 초록 (진행 및 성공 색상) */
+    --accent: #E58E26;         /* 단청 노랑/황토 (힌트 및 알림 색상) */
+    --accent-light: #FEF9E7;   /* 아주 밝은 노랑 (카드 강조용) */
+    
+    /* 폰트 및 여백 */
+    --font-title: 'Gowun Batang', 'Georgia', serif;
+    --font-body: 'Noto Sans KR', sans-serif;
+    --border-radius-lg: 24px;
+    --border-radius-md: 16px;
+    --border-radius-sm: 8px;
+    
+    /* 오클릭 방지를 위한 대형 터치 타겟 규격 */
+    --touch-target-height: 64px;
+    --font-size-large: 26px;    /* 기본 20pt(26px) 이상 지향 */
+    --font-size-title: 36px;
+    --font-size-sub: 22px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent; /* 모바일 터치 깜빡임 제거 */
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    line-height: 1.6;
+    word-break: keep-all; /* 한글 단어 잘림 방지 */
+}
+
+/* 스크롤바 디자인 */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-cream);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 6px;
+    border: 3px solid var(--bg-cream);
+}
+
+/* 공통 타이포그래피 */
+h1, h2, h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+}
+
+button {
+    font-family: var(--font-body);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+}
+
+/* -------------------------------------------------------------
+   1. 대형 레이아웃 및 화면 구성
+------------------------------------------------------------- */
+#app-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.screen {
+    display: none; /* 기본적으로 비활성 화면은 숨김 */
+    animation: fadeIn 0.4s ease-out forwards;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* -------------------------------------------------------------
+   2. 처음 화면 (홈 스크린)
+------------------------------------------------------------- */
+.home-screen {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 4px solid var(--text-dark);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 12px 24px rgba(31, 36, 33, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 한국 전통 문양 테두리 포인트 */
+.home-screen::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 2px dashed rgba(212, 77, 37, 0.3);
+    pointer-events: none;
+    border-radius: calc(var(--border-radius-lg) - 8px);
+}
+
+.home-logo-container {
+    margin-bottom: 30px;
+}
+
+.home-logo-badge {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px 24px;
+    font-size: var(--font-size-sub);
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-weight: 700;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.home-title {
+    font-size: 42px;
+    color: var(--primary);
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.home-subtitle {
+    font-size: var(--font-size-large);
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+/* 이름/호칭 입력 패널 */
+.user-setup-panel {
+    background-color: var(--accent-light);
+    border: 3px solid var(--accent);
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+    margin-bottom: 40px;
+}
+
+.setup-instruction {
+    font-size: var(--font-size-large);
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.honorific-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.honorific-btn {
+    background-color: white;
+    color: var(--text-dark);
+    border: 3px solid var(--text-muted);
+    border-radius: var(--border-radius-sm);
+    padding: 12px 24px;
+    font-size: var(--font-size-sub);
+    min-height: 54px;
+}
+
+.honorific-btn.selected {
+    background-color: var(--secondary);
+    color: white;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 4px rgba(31, 107, 82, 0.3);
+}
+
+.name-input-container {
+    display: flex;
+    max-width: 450px;
+    margin: 0 auto;
+    gap: 10px;
+}
+
+.name-input {
+    flex: 1;
+    font-size: var(--font-size-sub);
+    padding: 12px 20px;
+    border: 3px solid var(--text-dark);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    font-weight: bold;
+    min-height: 60px;
+    background-color: white;
+}
+
+.name-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(212, 77, 37, 0.2);
+}
+
+/* 홈화면 대형 시작 버튼 */
+.cta-button {
+    background-color: var(--primary);
+    color: white;
+    font-size: 30px;
+    padding: 18px 60px;
+    border-radius: 50px;
+    border: 4px solid var(--text-dark);
+    box-shadow: 0 8px 0 var(--text-dark);
+    width: 80%;
+    max-width: 450px;
+    min-height: 80px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.cta-button:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 var(--text-dark);
+}
+
+/* 설정 관리판 (소리 설정 등) */
+.options-bar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.option-toggle {
+    background: none;
+    color: var(--text-muted);
+    font-size: var(--font-size-sub);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: var(--border-radius-sm);
+}
+
+.option-toggle.active {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* 이어하기 안내 배너 */
+.resume-banner {
+    background-color: #EBF8FF;
+    border: 3px solid #3182CE;
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    margin-bottom: 30px;
+    display: none; /* 있을 때만 보임 */
+    animation: bounceIn 0.6s ease-out;
+}
+
+.resume-text {
+    font-size: var(--font-size-large);
+    font-weight: 700;
+    color: #2B6CB0;
+    margin-bottom: 12px;
+}
+
+.resume-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.resume-btn {
+    padding: 10px 24px;
+    font-size: var(--font-size-sub);
+    border-radius: var(--border-radius-sm);
+    min-height: 50px;
+}
+
+.resume-btn.confirm {
+    background-color: #3182CE;
+    color: white;
+}
+
+.resume-btn.new {
+    background-color: white;
+    color: #4A5568;
+    border: 2px solid #CBD5E0;
+}
+
+/* -------------------------------------------------------------
+   3. 게임 화면 (플레이 스크린)
+------------------------------------------------------------- */
+/* 상단 헤더 */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    border-bottom: 4px solid var(--text-dark);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.nav-button {
+    background-color: white;
+    color: var(--text-dark);
+    border: 3px solid var(--text-dark);
+    border-radius: var(--border-radius-sm);
+    padding: 10px 20px;
+    font-size: var(--font-size-sub);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 56px;
+    box-shadow: 0 4px 0 var(--text-dark);
+}
+
+.nav-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--text-dark);
+}
+
+.nav-button.hint-btn {
+    background-color: var(--accent);
+    color: white;
+}
+
+.nav-button.sound-btn.muted {
+    background-color: #E2E8F0;
+    color: #718096;
+}
+
+.stage-title-indicator {
+    font-size: var(--font-size-large);
+    font-weight: 900;
+    color: var(--primary);
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* 중앙 게임보드 그리드 */
+.game-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 좌우 기본 배치 */
+    gap: 24px;
+    margin-bottom: 24px;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 모바일/세로모드에서는 상하 배치 */
+@media (max-width: 900px) {
+    .game-board {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 16px;
+    }
+}
+
+.image-card-outer {
+    background: var(--bg-card);
+    border: 5px solid var(--text-dark);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.image-card-label {
+    background-color: var(--text-dark);
+    color: white;
+    text-align: center;
+    font-size: var(--font-size-sub);
+    font-weight: bold;
+    padding: 8px;
+    letter-spacing: 2px;
+}
+
+/* SVG 그림 감싸는 컨테이너 */
+.svg-viewport-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 4:3 비율 고정 */
+    background-color: #F8F9FA;
+    cursor: pointer;
+}
+
+.svg-viewport-wrapper svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    pointer-events: none; /* SVG 내부 개별 요소 클릭 방지 (좌표 기반 전체 컨테이너 터치 유도) */
+}
+
+/* 오클릭(잘못 누름) 이펙트 피드백 레이어 */
+.click-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+/* 성공 시 표시되는 큼직하고 뚜렷한 동그라미 */
+.found-marker {
+    position: absolute;
+    border: 6px solid var(--secondary);
+    background-color: rgba(31, 107, 82, 0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: popMarker 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    z-index: 15;
+    pointer-events: none;
+    /* 찾았을 때 반짝이는 보조 기호 추가 (체크마크 등) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.found-marker::after {
+    content: '✓';
+    color: var(--secondary);
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 0 0 6px white;
+}
+
+/* 힌트 작동 시 깜빡이는 유도 가이드 원 */
+.hint-marker {
+    position: absolute;
+    border: 6px dashed var(--accent);
+    background-color: rgba(229, 142, 38, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulseHint 1.2s infinite ease-in-out;
+    z-index: 12;
+    pointer-events: none;
+}
+
+/* 하단 진도율 게이지 및 문구 */
+.progress-panel {
+    background: var(--bg-card);
+    border: 4px solid var(--text-dark);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    text-align: center;
+}
+
+.progress-text {
+    font-size: var(--font-size-large);
+    font-weight: 900;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.progress-encouragement {
+    font-size: var(--font-size-sub);
+    color: var(--primary);
+    font-weight: 700;
+    margin-top: 8px;
+    min-height: 33px; /* 높이 예약하여 텍스트 교체 시 덜컹거림 방지 */
+}
+
+.progress-bar-container {
+    background-color: #E2E8F0;
+    border: 3px solid var(--text-dark);
+    height: 32px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--secondary);
+    transition: width 0.4s ease-out;
+}
+
+.progress-bar-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-dark);
+}
+
+/* -------------------------------------------------------------
+   4. 성공 / 축하 모달 스크린
+------------------------------------------------------------- */
+.success-screen {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 4px solid var(--text-dark);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    align-items: center;
+    justify-content: center;
+}
+
+.success-badge {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+}
+
+.success-message-title {
+    font-size: 38px;
+    color: var(--secondary);
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.success-message-body {
+    font-size: var(--font-size-large);
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+
+.success-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.success-btn {
+    font-size: 26px;
+    padding: 16px 36px;
+    border-radius: 40px;
+    border: 3px solid var(--text-dark);
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 0 var(--text-dark);
+}
+
+.success-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--text-dark);
+}
+
+.success-btn.next-btn {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.success-btn.home-btn {
+    background-color: white;
+    color: var(--text-dark);
+}
+
+/* 꽃가루 축하 연출용 절대좌표 캔버스 */
+#confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* -------------------------------------------------------------
+   5. 키프레임 애니메이션 정의
+------------------------------------------------------------- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popMarker {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    80% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes pulseHint {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.4; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.4; }
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}

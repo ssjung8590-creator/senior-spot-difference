@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>시니어 맞춤형 틀린그림찾기 - 두뇌 건강 코칭</title>
+    
+    <!-- SEO 메타 태그 -->
+    <meta name="description" content="어르신들의 인지 건강과 집중력 향상을 위한 시니어 맞춤형 틀린그림찾기 앱입니다. 큰 글씨, 고대비 디자인, 무제한 시간과 친근한 목소리 격려 기능이 특징입니다.">
+    <meta name="keywords" content="틀린그림찾기, 시니어 게임, 치매 예방, 두뇌 건강, 어르신 게임, 큰글씨 게임, 실버 케어">
+    <meta name="author" content="Antigravity">
+    
+    <!-- 스타일시트 연동 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- 축하 꽃가루 캔버스 (게임 성공 시 활성화) -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <div id="app-container">
+        
+        <!-- =============================================================
+             1. 처음 화면 (홈 스크린)
+             ============================================================= -->
+        <main id="home-screen" class="screen active" aria-labelledby="home-main-title">
+            <div class="home-screen">
+                <div class="home-logo-container">
+                    <span class="home-logo-badge">🧠 두뇌 튼튼 건강 코칭</span>
+                    <h1 id="home-main-title" class="home-title">어르신 맞춤형<br><span style="color: var(--secondary);">틀린그림찾기</span></h1>
+                    <p class="home-subtitle">그림 두 장 속 서로 다른 곳을 편안하게 찾아보세요.</p>
+                </div>
+
+                <!-- 이어하기 배너 패널 (기존 진행 기록이 로컬스토리지에 존재할 때 표출) -->
+                <div id="resume-banner-panel" class="resume-banner" role="status">
+                    <p id="resume-banner-text" class="resume-text">어머님, 아버님! 지난번에 2단계까지 하셨네요!</p>
+                    <div class="resume-buttons">
+                        <button id="resume-confirm-btn" class="resume-btn confirm">▶ 이어서 하기</button>
+                        <button id="resume-new-btn" class="resume-btn new">처음부터 다시</button>
+                    </div>
+                </div>
+
+                <!-- 이름 및 호칭 설정 카드 패널 -->
+                <div class="user-setup-panel">
+                    <h2 class="setup-instruction">어르신, 성함과 호칭을 알려주세요</h2>
+                    
+                    <!-- 호칭 선택 옵션 -->
+                    <div class="honorific-options" role="group" aria-label="호칭 선택">
+                        <button type="button" class="honorific-btn selected" data-value="어머님">어머님 👵</button>
+                        <button type="button" class="honorific-btn" data-value="아버님">아버님 👴</button>
+                        <button type="button" class="honorific-btn" data-value="어르신">어르신 🌸</button>
+                        <button type="button" class="honorific-btn" data-value="님">직접입력 ✍</button>
+                    </div>
+
+                    <!-- 이름 직접 입력 폼 -->
+                    <div class="name-input-container">
+                        <input type="text" id="user-name-input" class="name-input" placeholder="성함을 여기에 적어주세요 (예: 춘자)" aria-label="어르신 성함 입력">
+                    </div>
+                </div>
+
+                <!-- 게임 시작 실행 버튼 -->
+                <button type="button" id="start-game-btn" class="cta-button">
+                    <span>🎮 게임 시작하기</span>
+                </button>
+
+                <!-- 하단 보조 옵션바 (소리 활성 사전 확인) -->
+                <div class="options-bar">
+                    <span class="option-toggle active">📢 잔잔한 음악과 음성 칭찬이 함께 흘러나옵니다</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- =============================================================
+             2. 게임 플레이 화면 (플레이 스크린)
+             ============================================================= -->
+        <section id="game-screen" class="screen" aria-label="게임 플레이 구역">
+            <!-- 상단 네비게이션 헤더 -->
+            <header class="game-header">
+                <button type="button" id="nav-home-btn" class="nav-button" aria-label="처음 화면으로 가기">
+                    🏠 처음으로
+                </button>
+                
+                <h2 id="stage-title-indicator" class="stage-title-indicator">
+                    1단계: 정겨운 시골 집
+                </h2>
+                
+                <button type="button" id="nav-sound-btn" class="nav-button sound-btn" aria-label="소리 토글">
+                    🔊 소리 켬
+                </button>
+                
+                <button type="button" id="nav-hint-btn" class="nav-button hint-btn" aria-label="힌트 돋보기 보기">
+                    🔍 돋보기 힌트
+                </button>
+            </header>
+
+            <!-- 중앙 그림판 구역 (좌우/상하 스플릿) -->
+            <div class="game-board">
+                <!-- 원본 그림 카드 (왼쪽/위) -->
+                <div class="image-card-outer">
+                    <div class="image-card-label" aria-hidden="true">◀ 원본 그림</div>
+                    <div id="original-wrapper" class="svg-viewport-wrapper">
+                        <!-- SVG 동적 바인딩 구역 -->
+                    </div>
+                </div>
+
+                <!-- 대조군 그림 카드 (오른쪽/아래) -->
+                <div class="image-card-outer">
+                    <div class="image-card-label" aria-hidden="true">◀ 아래의 다른 곳을 찾으세요</div>
+                    <div id="altered-wrapper" class="svg-viewport-wrapper">
+                        <!-- SVG 동적 바인딩 구역 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 진행 상태 패널 -->
+            <footer class="progress-panel">
+                <p id="progress-text" class="progress-text">
+                    춘자 어머님, 전체 3개 중 0개를 찾으셨어요!
+                </p>
+                
+                <!-- 대형 진행도 게이지 -->
+                <div class="progress-bar-container" aria-label="진행도 비율">
+                    <div id="progress-fill" class="progress-bar-fill"></div>
+                    <span id="progress-label" class="progress-bar-label">0%</span>
+                </div>
+                
+                <!-- 다정한 격려 문구 -->
+                <p id="progress-encouragement" class="progress-encouragement">
+                    천천히 찾아보세요. 시간에 쫓길 필요가 전혀 없답니다.
+                </p>
+            </footer>
+        </section>
+
+        <!-- =============================================================
+             3. 성공 축하 모달 스크린 (성공 스크린)
+             ============================================================= -->
+        <section id="success-screen" class="screen success-screen" aria-label="성공 축하 화면">
+            <div class="success-badge" aria-hidden="true">🎉</div>
+            
+            <h2 id="success-title" class="success-message-title">
+                어머님, 정말 대단해요!
+            </h2>
+            
+            <p id="success-message" class="success-message-body">
+                벌써 1단계를 무사히 성공하셨습니다.<br>뇌 세포가 아주 기뻐하고 있어요!
+            </p>
+
+            <!-- 축하 선택 분기 버튼 -->
+            <div class="success-navigation">
+                <button type="button" id="success-next-btn" class="success-btn next-btn">
+                    🌸 다음 단계 도전하기
+                </button>
+                <button type="button" id="success-home-btn" class="success-btn home-btn">
+                    🏠 처음 화면으로 가기
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 스크립트 파일 연동 (순서 필수: 데이터 -> 사운드 -> 게임 엔진) -->
+    <script src="js/levels.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
