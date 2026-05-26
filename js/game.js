@@ -122,6 +122,11 @@ class GameController {
       this.triggerHint();
     });
 
+    // [게임판] 다음 그림으로 넘어가기 (건너뛰기) 버튼 클릭
+    document.getElementById("nav-skip-btn").addEventListener("click", () => {
+      this.handleSkipStage();
+    });
+
     // [게임판] 터치 영역 클릭 판정 바인딩 (좌/우 또는 상/하 두 쪽 모두에 바인딩)
     const originalWrapper = document.getElementById("original-wrapper");
     const alteredWrapper = document.getElementById("altered-wrapper");
@@ -306,6 +311,22 @@ class GameController {
         }
       });
     }, 4500);
+  }
+
+  // 현재 단계 건너뛰기 기능 (어르신 맞춤 스트레스 방지)
+  handleSkipStage() {
+    this.playSoftTick();
+    this.speak("괜찮아요! 언제든 다른 그림으로 넘어가실 수 있어요. 다음 단계로 가볼까요?");
+    
+    // 1.2초 뒤 다음 단계로 자연스럽게 이동
+    setTimeout(() => {
+      this.currentStageIndex++;
+      if (this.currentStageIndex < window.gameLevels.length) {
+        this.startStage(this.currentStageIndex);
+      } else {
+        this.handleAllClear();
+      }
+    }, 1200);
   }
 
   // -------------------------------------------------------------

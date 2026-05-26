@@ -360,6 +360,11 @@ button {
     color: #718096;
 }
 
+.nav-button.skip-btn {
+    background-color: #CBD5E0;
+    color: var(--text-dark);
+}
+
 .stage-title-indicator {
     font-size: var(--font-size-large);
     font-weight: 900;
